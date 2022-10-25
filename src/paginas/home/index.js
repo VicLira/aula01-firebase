@@ -2,53 +2,55 @@ import React,{useState,useEffect} from 'react'
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View ,FlatList,Image,TouchableOpacity} from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { firebase } from '../../firebase/firebaseConnection'
+import firebase from '../../firebase/firebaseConnection'
+import { CardAluno } from '../../components/cardAluno';
 
 export default function Home() {
   const navigation = useNavigation();
   const [alunos,setAlunos] = useState([]);
-  const [nota1,setNota1] = useState([]);
-  const [nota2,setNota2] = useState([]);
-  const [nota3,setNota3] = useState([]);
 
-  function irDetalhes(name,n1,n2,n3,img){
-    navigation.navigate("Detalhes",{nome:name,nota1:n1,nota2:n2,nota3:n3,imagem:img})
- }
+//   function irDetalhes(name,n1,n2,n3,img){
+//     navigation.navigate("Detalhes",{nome:name,nota1:n1,nota2:n2,nota3:n3,imagem:img})
+//  }
 
-  // useEffect(()=>{
+  useEffect(()=>{
 
 
-  //   async function buscarAlunos(){
+    async function buscarAlunos(){
 
 
-  //    await firebase.database().ref('Alunos/1').on('value',(snapshot) =>{
+     await firebase.database().ref('Alunos').on('value',(snapshot) =>{
 
-  //     setAlunos();
-  //     setNota1(snapshot.val().Nota1);
-  //     setNota2(snapshot.val().Nota2);
-  //     setNota3(snapshot.val().Nota3);
-  
-  //     })
-     
+      snapshot.forEach((childItem) => {
+        var data = {
+          key : childItem.key,
+          nome : childItem.val().Nome,
+          nota1 : childItem.val().Nota1,
+          nota2 : childItem.val().Nota2,
+          nota3 : childItem.val().Nota3, 
+          imagem : childItem.val().Imagem
+        }
 
-  //   }
+        setAlunos(alunos => [...alunos,data]);
+      })
+      })
+    }
+    buscarAlunos();
 
-
-  //   buscarAlunos();
-
-  // },[])
+  },[])
 
   return (
 
     <View style = {styles.container}>
       <Text style={{fontSize:30,fontWeight:'bold',}}> LISTA DE ALUNOS  </Text>
 
-
-      <Text>{alunos}</Text>
-      <Text>{nota1}</Text>
-      <Text>{nota2}</Text>
-      <Text>{nota3}</Text>
-
+      <FlatList 
+        data = {alunos}
+        numColumns={2}
+        keyExtractor = { (item) => item.key}
+        renderItem = { ({item}) => <CardAluno nome={item.nome} urlImg={item.imagem}/> }
+      />
+  
 
 
 
@@ -79,5 +81,9 @@ const styles = StyleSheet.create({
     marginLeft:5,
     borderWidth:2,
     borderRadius:8
+  },
+  alunoImg: {
+    width: 150,
+    height: 150,
   },
 });
