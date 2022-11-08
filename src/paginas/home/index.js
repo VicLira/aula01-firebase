@@ -20,7 +20,7 @@ export default function Home() {
 
 
      await firebase.database().ref('Alunos').on('value',(snapshot) =>{
-
+      setAlunos([])
       snapshot.forEach((childItem) => {
         var data = {
           key : childItem.key,
@@ -41,30 +41,38 @@ export default function Home() {
 
   return (
 
-    <View style = {styles.container}>
-      <Text style={{fontSize:30,fontWeight:'bold',}}> LISTA DE ALUNOS  </Text>
+    <View style ={estilos.listWrapper}>
+      <View style={estilos.container}>
+        <Text style={estilos.title}> LISTA DE ALUNOS  </Text>
 
-      <FlatList 
-        data = {alunos}
-        numColumns={2}
-        keyExtractor = { (item) => item.key}
-        renderItem = { ({item}) => <CardAluno nome={item.nome} urlImg={item.imagem}/> }
-      />
-  
-
-
-
+        <FlatList 
+          data = {alunos}
+          numColumns={2}
+          keyExtractor = { (item) => item.key}
+          renderItem = { ({item}) => <CardAluno data={item}/> }
+        />
+      </View>
     </View>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
+const estilos = StyleSheet.create({
+  listWrapper: {
     flex: 1,
-    backgroundColor: '#fff',
     alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor:'#F0F8FF'
+    backgroundColor:'#F0F8FF',
+    backgroundColor: '#fff',
+  },
+  container: {
+    width: '100%',
+    alignItems: 'center',
+  },
+  title: {
+    width: '90%',
+    maxWidth: 400,
+    fontSize: 24,
+    textAlign: 'left',
+    marginVertical: 18,
   },
   imagems:{
     width:"70%",
@@ -72,7 +80,6 @@ const styles = StyleSheet.create({
     borderRadius:8
   },
   containerAlunos: {
-    height:160,
     width:180,
     backgroundColor: '#D3D3D3',
     alignItems: 'center',
@@ -80,7 +87,8 @@ const styles = StyleSheet.create({
     marginTop:40,
     marginLeft:5,
     borderWidth:2,
-    borderRadius:8
+    borderRadius:8,
+    flexWrap: 'wrap',
   },
   alunoImg: {
     width: 150,

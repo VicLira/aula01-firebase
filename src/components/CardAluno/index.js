@@ -1,15 +1,24 @@
 import { StyleSheet, Text, View ,FlatList,Image,TouchableOpacity} from 'react-native';
-import React from 'react'
+import React from 'react';
+import { GradientOverlay } from '../GradientOverlay';
+import { useNavigation } from '@react-navigation/native';
 
-export function CardAluno({nome, urlImg}) {
+export function CardAluno({data}) {
+    const navigation = useNavigation()
+
+    function getDetails() {
+        navigation.navigate('Detalhes', {dados : data});
+    }
+
   return (
-    <View style={estilo.container}>
+    <TouchableOpacity style={estilo.container} onPress={getDetails}>
         <Image 
-            source={{uri:urlImg}}
+            source={{uri:data.imagem}}
             style={estilo.imagem}
         />
-        <Text style={estilo.nome}>{nome}</Text>
-    </View>
+        <Text style={estilo.nome}>{data.nome}</Text>
+        <GradientOverlay />
+    </TouchableOpacity>
   )
 }
 
@@ -19,21 +28,24 @@ const estilo = StyleSheet.create ({
         height: 300,
 
         margin: 5,
-        paddingHorizontal: 10,
-        paddingVertical: 30,
         gap: 8,
         borderRadius: 8,
 
         backgroundColor: '#abcdef',
         justifyContent: 'space-around',
         alignItems: 'center',
+        borderRadius: 18,
+        overflow: 'hidden',
     },
     imagem: {
-        height: 130,
-        width: 130,
-        borderRadius: 500,
+        height: '100%',
+        width: '100%',
     },
     nome: {
-        fontSize: 18,
+        position: 'absolute',
+        fontSize: 24,
+        color: '#fff',
+        bottom: 0,
+        zIndex: 2,
     },
 })
