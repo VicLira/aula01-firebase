@@ -14,12 +14,10 @@ export default function Detalhes(){
                 <View style={estilo.profileCard}>
                     <Image
                         style={estilo.profileImg}
-                        source={{
-                        uri: 'https://reactnative.dev/img/tiny_logo.png',
-                        }}
+                        source={route.params?.dados.imagem}
                     />
                     <Text style={estilo.profileName}>
-                        Victor Lira
+                        {route.params?.dados.nome}
                     </Text>
                 </View>
                 
@@ -120,6 +118,7 @@ const estilo = StyleSheet.create ({
     formWrapper: {
         marginTop: 100,
         width: '100%',
+        maxWidth: 600,
         height: '100%',
         justifyContent: 'space-around',
         alignItems: 'center',
